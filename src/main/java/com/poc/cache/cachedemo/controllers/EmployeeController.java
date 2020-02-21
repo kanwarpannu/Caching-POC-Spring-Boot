@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/v1")
@@ -35,8 +36,8 @@ public class EmployeeController {
 
     @GetMapping(value = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getEmployee(@PathVariable("id") String id) {
-        Employee savedEmployee = employeeRepository.findById(Long.parseLong(id)).orElse(null);
-        if (savedEmployee == null) {
+        Optional<Employee> savedEmployee = employeeRepository.findById(Long.parseLong(id));
+        if (!savedEmployee.isPresent()) {
             return new ResponseEntity<>("Employee not found", HttpStatus.OK);
         }
         return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
@@ -50,23 +51,23 @@ public class EmployeeController {
 
     @PutMapping(value = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateEmployee(@PathVariable("id") String id, @RequestBody Employee employee) {
-        Employee savedEmployee = employeeRepository.findById(Long.parseLong(id)).orElse(null);
-        if (savedEmployee == null) {
+        Optional<Employee> savedEmployee = employeeRepository.findById(Long.parseLong(id));
+        if (!savedEmployee.isPresent()) {
             return new ResponseEntity<>("Employee not found", HttpStatus.OK);
         }
-        savedEmployee.setName(employee.getName());
-        savedEmployee.setRole(employee.getRole());
-        savedEmployee.setPhoneNumber(employee.getPhoneNumber());
+        savedEmployee.get().setName(employee.getName());
+        savedEmployee.get().setRole(employee.getRole());
+        savedEmployee.get().setPhoneNumber(employee.getPhoneNumber());
 
-        Employee returnedEmployee = employeeRepository.save(savedEmployee);
+        Employee returnedEmployee = employeeRepository.save(savedEmployee.get());
 
         return new ResponseEntity<>(returnedEmployee, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") String id) {
-        Employee savedEmployee = employeeRepository.findById(Long.parseLong(id)).orElse(null);
-        if (savedEmployee == null) {
+        Optional<Employee> savedEmployee = employeeRepository.findById(Long.parseLong(id));
+        if (!savedEmployee.isPresent()) {
             return new ResponseEntity<>("Employee not found", HttpStatus.OK);
         }
 
