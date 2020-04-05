@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: use and put commands from this Reference to readme file https://markheath.net/post/exploring-redis-with-docker
 //TODO: Test the code
-//TODO: Add swagger UI
-//TODO: format and analyse entire code
+
+//TODO: exception handling missing
+
+//TODO: cant parse json error when get id is called and db is empty
 
 @RestController
 @RequestMapping(path = "/api/v1")

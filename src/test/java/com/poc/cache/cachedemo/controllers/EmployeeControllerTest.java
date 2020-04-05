@@ -30,36 +30,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //TODO: missing cacheable test case, make sure to use temp cache and not redis during test cases
 
+//TODO: divide unit and integration tests
+
 @WebMvcTest(controllers = EmployeeController.class)
 @DisplayName("GIVEN employee controller is called")
 class EmployeeControllerTest {
 
-    @MockBean
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
     String id = "1";
-
     Employee employee = Employee.builder()
             .id(Long.valueOf(id))
             .name("John Doe")
             .role("Programmer")
             .phoneNumber("1234567890")
             .build();
-
     Employee updatedEmployee = Employee.builder()
             .id(2L)
             .name("First Last")
             .role("programmer")
             .phoneNumber("111111111")
             .build();
-
     List<Employee> employeeList = Arrays.asList(employee, updatedEmployee);
+    @MockBean
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("WHEN POST endpoint is hit THEN create a new employee in database")
