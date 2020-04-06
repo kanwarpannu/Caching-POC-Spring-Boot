@@ -4,7 +4,6 @@ import com.poc.cache.cachedemo.models.Employee;
 import com.poc.cache.cachedemo.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
-
-//TODO: Test the code
-
-//TODO: exception handling missing
-
-//TODO: cant parse json error when get id is called and db is empty
 
 @RestController
 @RequestMapping(path = "/api/v1")
@@ -31,48 +23,54 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-    @PostMapping(value = "/employee", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/employee")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee savedEmployee = employeeService.saveEmployee(employee).orElse(null);
+        Employee savedEmployee = employeeService.saveEmployee(employee);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/employee/{id}")
     public ResponseEntity<?> getEmployee(@PathVariable("id") String id) {
-        Optional<Employee> savedEmployee = employeeService.getEmployeeById(Long.parseLong(id));
-        if (savedEmployee.isPresent()) {
+        Employee savedEmployee = employeeService.getEmployeeById(Long.parseLong(id));
+        if (savedEmployee != null) {
             return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
         }
         return new ResponseEntity<>("Employee not found", HttpStatus.OK);
     }
 
-    @GetMapping(value = "/employee", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/employee")
     public ResponseEntity<List<Employee>> getAllEmployee() {
         List<Employee> employeeList = employeeService.getAllEmployee();
         return ResponseEntity.ok(employeeList);
     }
 
-    @PutMapping(value = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/employee/{id}")
     public ResponseEntity<?> updateEmployee(@PathVariable("id") String id, @RequestBody Employee employee) {
-        Optional<Employee> savedEmployee = employeeService.getEmployeeById(Long.parseLong(id));
-        if (savedEmployee.isPresent()) {
-            savedEmployee.get().setName(employee.getName());
-            savedEmployee.get().setRole(employee.getRole());
-            savedEmployee.get().setPhoneNumber(employee.getPhoneNumber());
+        Employee savedEmployee = employeeService.getEmployeeById(Long.parseLong(id));
+        if (savedEmployee != null) {
+            savedEmployee.setRole(employee.getRole());
+            savedEmployee.setName(employee.getName());
+            savedEmployee.setPhoneNumber(employee.getPhoneNumber());
 
-            Employee returnedEmployee = employeeService.saveEmployee(savedEmployee.get()).orElse(null);
+            Employee returnedEmployee = employeeService.saveEmployee(savedEmployee);
             return new ResponseEntity<>(returnedEmployee, HttpStatus.OK);
         }
         return new ResponseEntity<>("Employee not found", HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/employee/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") String id) {
-        Optional<Employee> savedEmployee = employeeService.getEmployeeById(Long.parseLong(id));
-        if (savedEmployee.isPresent()) {
+        Employee savedEmployee = employeeService.getEmployeeById(Long.parseLong(id));
+        if (savedEmployee != null) {
             employeeService.deleteEmployeeById(Long.parseLong(id));
             return new ResponseEntity<>("Employee deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Employee not found", HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/employee")
+    public ResponseEntity<String> deleteAllEmployee() {
+        employeeService.deleteAllEmployee();
+        return new ResponseEntity<>("All Employees deleted", HttpStatus.OK);
     }
 }

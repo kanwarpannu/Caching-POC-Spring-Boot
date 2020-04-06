@@ -1,17 +1,14 @@
 # Caching-POC (Using Redis in Docker)
 
-Used spring cache in memory during running tests, And Redis dependencies during runtime.
+Uses spring cache "in-memory" during testing and Redis during runtime.
 
 Use following commands to run Redis in docker (Assuming we are using linux containers).
 
 1. Start Redis:
-`docker run -d -p 6379:6379 --name custom-redis redis`
+`docker run -d -p 6379:6379 --name my-redis redis`
 
 2. Access shell inside Redis container:
-`docker exec -it custom-redis sh`
-
-3. Start redis-cli (when inside redis container shell):
-`redis-cli`
+`docker exec -it my-redis redis-cli`  
 
 Basic Redis commands:  
 1. `ping` - To check Redis is up  

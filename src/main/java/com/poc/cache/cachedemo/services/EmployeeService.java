@@ -3,45 +3,46 @@ package com.poc.cache.cachedemo.services;
 import com.poc.cache.cachedemo.models.Employee;
 import com.poc.cache.cachedemo.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
-//TODO: Put method has unnecessary id parameter since its coming in json as well?
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
-    //Return type and key of cacheput and cacheable is exactly the same
     @CachePut(value = "EMPLOYEE", key = "'EMPNUM:' + #employee.id")
-    public Optional<Employee> saveEmployee(Employee employee) {
-        return Optional.of(employeeRepository.save(employee));
+    public Employee saveEmployee(Employee employee) {
+        log.info("Saving employee into DB");
+        return employeeRepository.save(employee);
     }
 
     @Cacheable(value = "EMPLOYEE", key = "'EMPNUM:' + #id")
-    public Optional<Employee> getEmployeeById(Long id) {
-        return employeeRepository.findById(id);
+    public Employee getEmployeeById(Long id) {
+        log.info("Looking into DB for employee {}", id);
+        return employeeRepository.findById(id).orElse(null);
     }
 
     public List<Employee> getAllEmployee() {
         return employeeRepository.findAll();
     }
 
+    @CacheEvict(value = "EMPLOYEE", key = "'EMPNUM:' + #id")
     public void deleteEmployeeById(Long id) {
         employeeRepository.deleteById(id);
-        this.evictCacheByEmployee(id);
+        log.info("Employee number {} evicted from cache", id);
     }
 
-    @CacheEvict(value = "EMPLOYEE", key = "'EMPNUM:' + #id")
-    public void evictCacheByEmployee(Long id) {
+    @CacheEvict(value = "EMPLOYEE", allEntries = true)
+    public void deleteAllEmployee() {
+        employeeRepository.deleteAll();
+        log.info("Entire cache is cleared");
     }
-
-
 }

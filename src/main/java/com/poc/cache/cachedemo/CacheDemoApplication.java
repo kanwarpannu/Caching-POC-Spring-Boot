@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 //TODO: squash unwanted commits in git after everything is done
+
+//TODO: mention all technologies and spring versions (2.2) etc in readme file
 @SpringBootApplication
 public class CacheDemoApplication {
 
