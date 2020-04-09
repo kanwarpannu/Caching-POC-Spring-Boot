@@ -3,10 +3,9 @@ package com.poc.cache.cachedemo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+//TODO: Intro missing in readme.md file
 
 //TODO: squash unwanted commits in git after everything is done
-
-//TODO: mention all technologies and spring versions (2.2) etc in readme file
 @SpringBootApplication
 public class CacheDemoApplication {
 
