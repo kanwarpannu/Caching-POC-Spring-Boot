@@ -1,5 +1,6 @@
 package com.poc.cache.cachedemo.services;
 
+import com.poc.cache.cachedemo.annotations.ReadOnlyCacheable;
 import com.poc.cache.cachedemo.models.Employee;
 import com.poc.cache.cachedemo.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,12 @@ public class EmployeeService {
 
     @Cacheable(value = "EMPLOYEE", key = "'EMPNUM:' + #id")
     public Employee getEmployeeById(Long id) {
+        log.info("Looking into DB for employee {}", id);
+        return employeeRepository.findById(id).orElse(null);
+    }
+
+    @ReadOnlyCacheable(value = "EMPLOYEE", key = "'EMPNUM:' + #id")
+    public Employee getEmployeeReadOnlyById(long id) {
         log.info("Looking into DB for employee {}", id);
         return employeeRepository.findById(id).orElse(null);
     }

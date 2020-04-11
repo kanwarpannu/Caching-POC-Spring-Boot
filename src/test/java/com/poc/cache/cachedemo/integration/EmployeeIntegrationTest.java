@@ -1,4 +1,4 @@
-package com.poc.cache.cachedemo.controllers;
+package com.poc.cache.cachedemo.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @EnableCaching
-class EmployeeControllerTest {
+class EmployeeIntegrationTest {
 
     String id = "1";
     Employee employee = Employee.builder()
@@ -169,6 +169,49 @@ class EmployeeControllerTest {
                 () -> assertEquals(employeeList.get(1).getPhoneNumber(), actualResponse.get(1).getPhoneNumber()),
                 () -> assertEquals(employeeList.get(1).getRole(), actualResponse.get(1).getRole())
         );
+    }
+
+    @Test
+    @DisplayName("WHEN [GET] Read Only endpoint is hit with a valid employee id as path variable THEN get the employee from cache, if not exist then go to DB but do not persist the data in Cache")
+    public void getEmployeeReadonly_whenEmployeeFound() throws Exception {
+        employeeRepository.save(employee);
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/employee/{id}/readonly", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        Employee actualResponse = objectMapper.readValue(response, new TypeReference<Employee>() {
+        });
+
+        assertAll(
+                () -> assertEquals(employee.getId(), actualResponse.getId()),
+                () -> assertEquals(employee.getName(), actualResponse.getName()),
+                () -> assertEquals(employee.getPhoneNumber(), actualResponse.getPhoneNumber()),
+                () -> assertEquals(employee.getRole(), actualResponse.getRole())
+        );
+        assertThrows(NullPointerException.class, () -> cacheManager.getCache("EMPLOYEE")
+                .get("EMPNUM:" + employee.getId()).get());
+    }
+
+    @Test
+    @DisplayName("WHEN [GET] Read Only endpoint is hit with a invalid employee id as path variable THEN get the employee from cache, if not exist then go to DB AND finally return employee not found")
+    public void getEmployeeReadonly_whenEmployeeNotFound() throws Exception {
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/employee/{id}/readonly", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(response, "Employee not found");
+
+        assertThrows(NullPointerException.class, () -> cacheManager.getCache("EMPLOYEE")
+                .get("EMPNUM:" + employee.getId()).get());
     }
 
     @Test

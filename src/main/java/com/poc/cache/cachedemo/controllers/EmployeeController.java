@@ -73,4 +73,13 @@ public class EmployeeController {
         employeeService.deleteAllEmployee();
         return new ResponseEntity<>("All Employees deleted", HttpStatus.OK);
     }
+
+    @GetMapping(value = "/employee/{id}/readonly")
+    public ResponseEntity<?> getEmployeeReadonly(@PathVariable("id") String id) {
+        Employee savedEmployee = employeeService.getEmployeeReadOnlyById(Long.parseLong(id));
+        if (savedEmployee != null) {
+            return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Employee not found", HttpStatus.OK);
+    }
 }
