@@ -16,13 +16,14 @@ The application serves as an API to store employee data in a database and make s
 11. When **DELETE** endpoint is hit then all the employee data is removed from database and cache.
 
  *In real world scenario we would cache only the most used data (so only **GET** endpoint should store data in cache) otherwise the cache can grow quickly and with non required data.*  
+
 ## Requirements
   * Uses **Lombok** - Be sure to enable annotation processing  
   * Uses **Redis** on Docker - Download redis:alpine image from dockerhub  
   * Uses **Spring Cache 'in-memory'** - For Testing purposes only(comes with spring boot starter cache dependency)  
-  * Uses **Spring Boot** version - v2.2.4.RELEASE  
-  * Uses **Swagger UI**
-  * Uses **Java** - Adopt JDK 1.8.0_232  
+  * Uses **Spring Boot** - version v2.2.4.RELEASE  
+  * Uses **Swagger UI** - version v2.9.2
+  * Uses **Java** - Version Adopt JDK 1.8.0_232  
 
 ## Start Redis
 1. Start Redis:
@@ -35,7 +36,7 @@ The application serves as an API to store employee data in a database and make s
   * Build project using `mvn clean install`  
 
 ## Access Application  
-  * Access application from swagger using base url `localhost:9101/api/v1`  
+  * Access application from swagger using base url `http://localhost:9101/swagger-ui.html`  
 
 ## Basic Redis commands:  
 1. `ping` - To check Redis is up  
