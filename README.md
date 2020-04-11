@@ -19,6 +19,7 @@ The application serves as an API to store employee data in a database and make s
   * Uses **Redis** on Docker - Download redis:alpine image from dockerhub  
   * Uses **Spring Cache 'in-memory'** - For Testing purposes only(comes with spring boot starter cache dependency)  
   * Uses **Spring Boot** version - v2.2.4.RELEASE  
+  * Uses **Swagger UI**
 
 ## Start Redis
 1. Start Redis:
@@ -29,6 +30,9 @@ The application serves as an API to store employee data in a database and make s
 
 ## Build
   * Build project using `mvn clean install`  
+
+## Access Application  
+  * Access application from swagger using base url `localhost:9101/api/v1`  
 
 ## Basic Redis commands:  
 1. `ping` - To check Redis is up  
