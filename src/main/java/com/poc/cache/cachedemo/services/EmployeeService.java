@@ -37,12 +37,12 @@ public class EmployeeService {
     @CacheEvict(value = "EMPLOYEE", key = "'EMPNUM:' + #id")
     public void deleteEmployeeById(Long id) {
         employeeRepository.deleteById(id);
-        log.info("Employee number {} evicted from cache", id);
+        log.info("Evicting Employee number {} from cache", id);
     }
 
     @CacheEvict(value = "EMPLOYEE", allEntries = true)
     public void deleteAllEmployee() {
         employeeRepository.deleteAll();
-        log.info("Entire cache is cleared");
+        log.info("Clearing entire cache");
     }
 }
