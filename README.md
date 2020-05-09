@@ -19,21 +19,24 @@ The application serves as an API to store employee data in a database and make s
 
 ## Requirements
   * Uses **Lombok** - Be sure to enable annotation processing  
-  * Uses **Redis** on Docker - Download redis:alpine image from dockerhub  
+  * Uses **Redis** on Docker - Docker compose file will download it  
   * Uses **Spring Cache 'in-memory'** - For Testing purposes only(comes with spring boot starter cache dependency)  
   * Uses **Spring Boot** - version v2.2.4.RELEASE  
   * Uses **Swagger UI** - version v2.9.2
-  * Uses **Java** - Version Adopt JDK 1.8.0_232  
+  * Uses **Java** - Version Adopt Open JDK 1.8.0_232(Used during original dev), docker compose will download runtime environment  
 
-## Start Redis
-1. Start Redis:
-`docker run -d -p 6379:6379 --name my-redis redis`
+## Build
+  * Build project using `mvn clean install`  
+
+## Start Application
+1. Start App:
+`mvn clean install && docker-compose up`
 
 2. Access redis-cli inside Redis container:
 `docker exec -it my-redis redis-cli`  
 
-## Build
-  * Build project using `mvn clean install`  
+*Dev Notes*: Use this command to run app after changing source code:  
+`docker-compose down && mvn clean install && docker-compose build --no-cache && docker-compose up`  
 
 ## Access Application  
   * Access application from swagger using base url `http://localhost:9101/swagger-ui.html`  

@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  cache-demo:
+    build: .
+    ports:
+      - 9101:9101
+    depends_on:
+      - redis-demo
+    links:
+      - redis-demo
+  redis-demo:
+    image: redis:alpine
+    ports:
+      - 6379:6379

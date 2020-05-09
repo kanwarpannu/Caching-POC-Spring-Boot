@@ -12,9 +12,7 @@ spring:
     console:
       enabled: true
   redis:
-    host: localhost
+    host: redis-demo   #docker service name
     port: 6379
-    url: redis://localhost:6379
-    timeout: 500ms
 server:
   port: 9101
