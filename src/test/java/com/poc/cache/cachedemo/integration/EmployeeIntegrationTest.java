@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poc.cache.cachedemo.models.Employee;
 import com.poc.cache.cachedemo.repositories.EmployeeRepository;
-import com.poc.cache.cachedemo.services.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -314,7 +313,7 @@ class EmployeeIntegrationTest {
         assertAll(
                 () -> assertThrows(NullPointerException.class, () -> cacheManager.getCache("EMPLOYEE")
                         .get("EMPNUM:" + employeeList.get(0).getId()).get()),
-                ()->assertThrows(NullPointerException.class, () -> cacheManager.getCache("EMPLOYEE")
+                () -> assertThrows(NullPointerException.class, () -> cacheManager.getCache("EMPLOYEE")
                         .get("EMPNUM:" + employeeList.get(1).getId()).get())
         );
         assertAll(
